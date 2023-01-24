@@ -19,17 +19,19 @@ namespace Lib
 				std::string Buffer;
 				switch (Token::GetType(Stream.peek()))
 				{
+				case TokenType::Space:
+				case TokenType::EndOfFile:
+					Stream.get();
+					continue;
 				case TokenType::Add:
 				case TokenType::Sub:
 				case TokenType::Mul:
 				case TokenType::Div:
 				case TokenType::LeftBracket:
 				case TokenType::RightBracket:
+				case TokenType::Semicolon:
 					Buffer.push_back(Stream.get());
 					break;
-				case TokenType::Space:
-					Stream.get();
-					continue;
 				default:
 					while (Buffer.empty() || Token::GetType(Stream.peek()) == Token::GetType(Buffer.back()))
 					{

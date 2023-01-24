@@ -6,23 +6,24 @@
 
 namespace Lib
 {
-	enum class TokenType { Unknown, EndOfFile, Space, Number, Add, Sub, Mul, Div, LeftBracket, RightBracket };
+	enum class TokenType { Unknown, EndOfFile, Space, Number, Add, Sub, Mul, Div, LeftBracket, RightBracket, Semicolon };
 
 	class Token
 	{
 	public:
 		TokenType Type;
-		std::string Value;
+		std::string Text;
 	public:
-		Token(TokenType Type = TokenType::Unknown, const std::string& Value = "") : Type(Type), Value(Value)
+		Token(TokenType Type = TokenType::Unknown, const std::string& Text = "") : Type(Type), Text(Text)
 		{
 		}
 
 		static TokenType GetType(const char Char)
 		{
-			if (Char == '\0') return TokenType::EndOfFile;
+			if (Char == '\0' || Char == EOF) return TokenType::EndOfFile;
 			if ((Char >= '\t' && Char <= '\r') || Char == ' ') return TokenType::Space;
 			if ((Char >= '0' && Char <= '9') || Char == '.') return TokenType::Number;
+			if (Char == ';') return TokenType::Semicolon;
 			if (Char == '+') return TokenType::Add;
 			if (Char == '-') return TokenType::Sub;
 			if (Char == '*') return TokenType::Mul;
@@ -32,4 +33,9 @@ namespace Lib
 			return TokenType::Unknown;
 		}
 	};
+
+	std::ostream& operator<<(std::ostream& Output, const Token& Object)
+	{
+		return Output << "{" << static_cast<int>(Object.Type) << ",\"" << Object.Text << "\"}";
+	}
 }

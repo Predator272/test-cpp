@@ -6,25 +6,22 @@ int main()
 	{
 		try
 		{
-			std::cout << "Enter expression: ";
+			std::cout << "Enter: ";
 			std::string Input;
 			std::getline(std::cin, Input);
-
 			std::istringstream StringStream(Input);
-			Lib::Lexer Lexer(StringStream);
 
-			Lib::Parser Parser(Lexer.Tokens);
-			auto Expr = Parser.Parse();
 
-			std::cout << "Result: ";
-			for (auto Iter = Expr.begin(); Iter != Expr.end(); Iter++) {
-				if (Iter != Expr.begin())
-				{
-					std::cout << ", ";
-				}
-				std::cout << Iter->get()->Exec();
-			}
-			std::cout << "\n";
+			auto Tokens = Lib::Lexer(StringStream).Tokens;
+			std::ostringstream TokensString;
+			std::copy(Tokens.begin(), Tokens.end(), std::ostream_iterator<Lib::Token>(TokensString, "; "));
+			std::cout << "Tokens: " << TokensString.str() << "\n";
+
+
+			auto Expr = Lib::Parser(Tokens).Parse();
+			std::ostringstream ExprString;
+			std::copy(Expr.begin(), Expr.end(), std::ostream_iterator<std::shared_ptr<Lib::IExpression>>(ExprString, "; "));
+			std::cout << "Result: " << ExprString.str() << "\n";
 		}
 		catch (const std::exception& Error)
 		{

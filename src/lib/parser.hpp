@@ -33,7 +33,6 @@ namespace Lib
 		std::shared_ptr<IExpression> AddSub()
 		{
 			auto Result = this->MulDiv();
-
 			while (true)
 			{
 				if (this->Match(TokenType::Add))
@@ -47,14 +46,12 @@ namespace Lib
 				}
 				break;
 			}
-
 			return Result;
 		}
 
 		std::shared_ptr<IExpression> MulDiv()
 		{
 			auto Result = this->Unary();
-
 			while (true)
 			{
 				if (this->Match(TokenType::Mul))
@@ -68,7 +65,6 @@ namespace Lib
 				}
 				break;
 			}
-
 			return Result;
 		}
 
@@ -90,18 +86,18 @@ namespace Lib
 			Token Current = this->Peek();
 			if (this->Match(TokenType::Number))
 			{
-				return std::make_shared<NumberExpression>(std::stod(Current.Value));
+				return std::make_shared<NumberExpression>(std::stod(Current.Text));
 			}
 			if (this->Match(TokenType::LeftBracket))
 			{
 				auto Result = this->Expression();
 				if (!this->Match(TokenType::RightBracket))
 				{
-					throw std::runtime_error("required \")\"");
+					throw std::runtime_error("syntax error: missing \")\"");
 				}
 				return Result;
 			}
-			throw std::runtime_error("unknown expression");
+			throw std::runtime_error("syntax error: \"" + Current.Text + "\"");
 		}
 
 		bool Match(TokenType Type)
